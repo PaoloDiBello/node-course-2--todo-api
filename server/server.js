@@ -17,11 +17,11 @@ app.post('/todos', (req, res) => {
     todo.save().then((doc) => {
         res.status(200).send(doc)
     }, (e) => {
-        console.log('error: ', e)
+        //console.log('error: ', e)
         res.status(400).send(e);
     })
 
-    console.log(req.body);
+    // console.log(req.body);
 });
 
 // GET todos/ObjectID
@@ -29,3 +29,7 @@ app.post('/todos', (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
+
+module.exports = {
+    app
+}
