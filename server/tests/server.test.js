@@ -3,11 +3,11 @@ const expect = require('expect')
 const request = require('supertest')
 const { app } = require('./../server');
 const { Todo } = require('./../model/todo');
-
+const { ObjectID } = require('mongodb')
 const todos = [
-    { text: 'Nothing to do' },
-    { text: 'Do myself a favor and kms' },
-    { text: 'Shit on the floor' },
+    { _id: new ObjectID(), text: 'Nothing to do' },
+    { _id: new ObjectID(), text: 'Do myself a favor and kms' },
+    { _id: new ObjectID(), text: 'Shit on the floor' },
 ]
 
 beforeEach((done) => {
@@ -72,4 +72,36 @@ describe('GET /todos', () => {
             })
             .end(done)
     })
+})
+
+describe('GET /todos/:id', () => {
+
+    it('should return todo doc', (done) => {
+        const id = (todos[0]._id).toHexString();
+        const text = todos[0].text;
+        request(app)
+            .get(`/todos/${id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+            })
+            .end(done)
+    })
+
+    it('should return 404 if not found ', (done) => {
+        const id = new ObjectID().toHexString();
+        request(app)
+            .get(`/todos/${id}`)
+            .expect(404)
+            .end(done)
+    })
+
+    it('should return 404 for non-object ids ', (done) => {
+        const id = 'a';
+        request(app)
+            .get(`/todos/${id}`)
+            .expect(404)
+            .end(done)
+    })
+
 })
