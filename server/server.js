@@ -26,6 +26,17 @@ app.post('/todos', (req, res) => {
 
 // GET todos/ObjectID
 
+app.get('/todos', (req, res) => {
+    Todo.find().then((todos) => {
+        res.send({
+            todos
+        })
+    }, (e) => {
+        res.status(400).send(e)
+    })
+});
+
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
