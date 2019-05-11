@@ -1,3 +1,4 @@
+require('./config/config')
 const _ = require('lodash')
 const { mongoose } = require('./db/mongoose');
 const { Todo } = require('./model/todo');
@@ -99,7 +100,7 @@ app.put('/todos/:id', (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
 
