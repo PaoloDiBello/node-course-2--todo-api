@@ -7,7 +7,7 @@ const { ObjectID } = require('mongodb')
 const todos = [
     { _id: new ObjectID(), text: 'Nothing to do' },
     { _id: new ObjectID(), text: 'Do myself a favor and kms' },
-    { _id: new ObjectID(), text: 'Shit on the floor' },
+    { _id: new ObjectID(), text: 'Shit on the floor', completed: true, completedAt: 333 },
 ]
 
 beforeEach((done) => {
@@ -147,5 +147,48 @@ describe('DELETE /todos/:id', () => {
             .end(done)
     })
 
-
 })
+
+describe('PUT /todos/:id', () => {
+    const id = (todos[0]._id).toHexString();
+    let text = 'This should be the new text';
+
+    it('should update the todo', (done) => {
+
+        request(app)
+            .put(`/todos/${id}`)
+            .send({
+                completed: true,
+                text
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(true);
+                expect(typeof res.body.todo.completedAt).toBe('number');
+            })
+            .end(done)
+    });
+
+    it('should clear completedAt when todo is not completed', (done) => {
+        var id = todos[1]._id.toHexString();
+        text = 'This should be the new text!!';
+
+        request(app)
+            .put(`/todos/${id}`)
+            .send({
+                completed: false,
+                text
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(false);
+                expect(res.body.todo.completedAt).not.toBeTruthy();
+            })
+            .end(done);
+    });
+
+});
+
+
