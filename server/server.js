@@ -104,6 +104,23 @@ const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
 
+// POST /users
+
+app.post('/users', (req, res) => {
+    const body = _.pick(req.body, ['email', 'password'])
+
+    const users = new User(body)
+
+    users.save().then(() => {
+        return users.generateAuthToken();
+    }).then((token => {
+        res.header('x-auth', token).status(200).send(users)
+    })).catch(e => {
+        res.status(400).send(e);
+    })
+
+});
+
 module.exports = {
     app
 }
