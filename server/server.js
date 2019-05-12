@@ -10,6 +10,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const app = express();
+const { authenticate } = require('./middleware/authenticate')
 
 app.use(bodyParser.json());
 
@@ -102,7 +103,6 @@ app.put('/todos/:id', (req, res) => {
 
 const PORT = process.env.PORT;
 
-app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
 
 // POST /users
 
@@ -120,6 +120,13 @@ app.post('/users', (req, res) => {
     })
 
 });
+
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user)
+});
+
+
+app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
 
 module.exports = {
     app
