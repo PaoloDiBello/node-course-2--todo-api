@@ -61,12 +61,12 @@ UserSchema.statics.findByToken = function (token) {
     } catch (e) {
         return Promise.reject();
     }
- /*   console.log('x', User.findOne({
-        '_id': decoded._id,
-        'tokens.token': token,
-        'tokens.access': 'auth'
-    })) /*
-    
+    /*   console.log('x', User.findOne({
+           '_id': decoded._id,
+           'tokens.token': token,
+           'tokens.access': 'auth'
+       })) */
+
     return User.findOne({
         '_id': decoded._id,
         'tokens.token': token,
