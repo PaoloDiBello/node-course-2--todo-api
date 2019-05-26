@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-const _ = require('lodash')
+const _ = require('lodash');
+
 var UserSchema = new mongoose.Schema({
-    email:
-    {
+    email: {
         type: String,
         required: true,
         trim: true,
@@ -12,8 +12,8 @@ var UserSchema = new mongoose.Schema({
         unique: true,
         validate: {
             validator: validator.isEmail,
-            message: "{VALUE} is not a valid email "
-        },
+            message: '{VALUE} is not a valid email'
+        }
     },
     password: {
         type: String,
@@ -23,56 +23,67 @@ var UserSchema = new mongoose.Schema({
     tokens: [{
         access: {
             type: String,
-            require: true
+            required: true
         },
         token: {
             type: String,
             required: true
         }
-
     }]
-})
+});
 
 UserSchema.methods.toJSON = function () {
     var user = this;
     var userObject = user.toObject();
 
-    return _.pick(userObject, ['_id', 'email'])
-}
-
+    return _.pick(userObject, ['_id', 'email']);
+};
 
 UserSchema.methods.generateAuthToken = function () {
     var user = this;
     var access = 'auth';
     var token = jwt.sign({ _id: user._id.toHexString(), access }, 'abc123').toString();
-    user.tokens = user.tokens.concat([{ access, token }]);
+
+    user.tokens.push({ access, token });
+
     return user.save().then(() => {
-        return token
+        return token;
     });
-}
+};
 
 UserSchema.statics.findByToken = function (token) {
     var User = this;
     var decoded;
+
     try {
-        decoded = jwt.verify(token, 'abc123')
+        decoded = jwt.verify(token, 'abc123');
     } catch (e) {
-        return new Promise.reject();
-        // return new Promise((reject, resolve) => {
-        //     reject()
-        // })
+        return Promise.reject();
     }
+    console.log('x', User.findOne({
+        '_id': decoded._id,
+        'tokens.token': token,
+        'tokens.access': 'auth'
+    }))
     return User.findOne({
         '_id': decoded._id,
         'tokens.token': token,
         'tokens.access': 'auth'
     });
+};
 
-}
+UserSchema.pre('save', function (next) {
+    var user = this;
+
+    if (user.isModified('password')) {
+
+    } else {
+
+    }
+
+})
 
 
-var User = new mongoose.model('User', UserSchema)
+var User = mongoose.model('User', UserSchema);
 
-module.exports = {
-    User
-}
+module.exports = { User }
