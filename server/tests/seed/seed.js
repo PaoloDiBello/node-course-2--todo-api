@@ -32,7 +32,7 @@ const todos = [{
 }];
 
 const populateTodos = (done) => {
-    // timeout(5000); // override default 2000 ms
+    // timeout(5000); //. override default 2000 ms
     Todo.deleteMany({}).then(() => {
         return Todo.insertMany(todos);
     }).then(() => done());
