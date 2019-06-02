@@ -247,7 +247,8 @@ describe('POST /users', () => {
         var password = ''
 
         request(app)
-            .post({ email, password })
+            .post('/users')
+            .send({ email, password })
             .expect(400)
             .end(done);
     })
@@ -257,7 +258,8 @@ describe('POST /users', () => {
         var password = ''
 
         request(app)
-            .post({ email, password })
+            .post('/users')
+            .send({ email, password })
             .expect(400)
             .end(done);
     })

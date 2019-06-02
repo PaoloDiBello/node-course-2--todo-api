@@ -23,7 +23,6 @@ app.post('/todos', (req, res) => {
         res.status(200).send(doc);
     }).catch(e => {
         res.status(400).send(e);
-
     })
 
 });
@@ -120,6 +119,14 @@ app.post('/users', (req, res) => {
 app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user)
 });
+
+// POST /users/login {email, password}
+app.post('/users/login', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    console.log('body', body)
+    res.send(body);
+})
+
 
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
