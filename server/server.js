@@ -16,19 +16,17 @@ app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
     var todo = new Todo({
-        text: req.body.text
-    })
-
+        text: req.body.text,
+    });
     todo.save().then((doc) => {
-        res.status(200).send(doc)
-    }, (e) => {
-        //console.log('error: ', e)
+        console.log('doc', doc)
+        res.status(200).send(doc);
+    }).catch(e => {
         res.status(400).send(e);
+
     })
 
-    // console.log(req.body);
 });
-
 
 app.get('/todos', (req, res) => {
     Todo.find().then((todos) => {
@@ -105,21 +103,19 @@ const PORT = process.env.PORT;
 
 
 // POST /users
-
 app.post('/users', (req, res) => {
-    const body = _.pick(req.body, ['email', 'password'])
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
 
-    const users = new User(body)
-
-    users.save().then(() => {
-        return users.generateAuthToken();
-    }).then((token => {
-        res.header('x-auth', token).status(200).send(users)
-    })).catch(e => {
+    user.save().then(() => {
+        return user.generateAuthToken();
+    }).then((token) => {
+        res.header('x-auth', token).send(user);
+    }).catch((e) => {
         res.status(400).send(e);
     })
-
 });
+
 
 app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user)
@@ -127,6 +123,7 @@ app.get('/users/me', authenticate, (req, res) => {
 
 
 app.listen(PORT, () => console.log(`Server Running On Port ${PORT}`));
+
 
 module.exports = {
     app
