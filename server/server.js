@@ -51,7 +51,7 @@ app.get('/todos/:id', authenticate, (req, res) => {
 
     Todo.findOne(
         {
-            id,
+            _id: id,
             _creator: req.user._id
         }
     ).then((todo) => {
