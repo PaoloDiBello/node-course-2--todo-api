@@ -367,7 +367,7 @@ describe('POST users/login', () => {
             })
             .expect(400)
             .expect((res) => {
-                expect(res.headers['x-auth']).toNotExist();
+                expect(res.headers['x-auth']).toBeFalsy();
             })
             .end((err, res) => {
                 User.findById(users[1]._id).then((user) => {
