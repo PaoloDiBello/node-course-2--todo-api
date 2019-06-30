@@ -7,6 +7,7 @@ const { Todo } = require('./../model/todo');
 const { User } = require('./../model/user');
 const { todos, populateTodos, users, populateUsers } = require('./seed/seed');
 
+
 beforeEach(populateUsers);
 beforeEach(populateTodos);
 
@@ -33,6 +34,7 @@ describe('POST /todos', () => {
                     done();
                 }).catch((e) => done(e));
             });
+        done();
     });
 
     it('should not create todo with invalid body data', (done) => {
